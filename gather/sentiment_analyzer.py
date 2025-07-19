@@ -1,7 +1,7 @@
 import os
 import json
 from openai import OpenAI
-from typing import List
+from typing import List, Dict, Any
 
 class SentimentAnalyzer:
     def __init__(self, api_key: str = None):
@@ -10,7 +10,8 @@ class SentimentAnalyzer:
             raise ValueError('OPENAI_API_KEY not set')
         self.client = OpenAI(api_key=self.api_key)
 
-    def analyze(self, texts: List[str]) -> List[float]:
+    def analyze(self, texts: List[str], symbol: str = '') -> List[Dict[str, Any]]:
+        """Return structured sentiment insights for each provided text."""
         sentiments = []
         for text in texts:
             try:
@@ -44,10 +45,31 @@ class SentimentAnalyzer:
                 content = response.choices[0].message.content.strip()
                 try:
                     data = json.loads(content)
-                    score = float(data.get('sentiment', 0))
+                    # ensure required keys exist even if missing from response
+                    data = {
+                        'sentiment': data.get('sentiment', 0.0),
+                        'affected_entities': data.get('affected_entities', []),
+                        'impact_duration': data.get('impact_duration', ''),
+                        'confidence_score': data.get('confidence_score', 0.0),
+                        'rationale': data.get('rationale', ''),
+                        **({'precedent': data.get('precedent')} if 'precedent' in data else {})
+                    }
                 except Exception:
-                    score = 0.0
+                    # fallback structure on parsing failure
+                    data = {
+                        'sentiment': 0.0,
+                        'affected_entities': [],
+                        'impact_duration': '',
+                        'confidence_score': 0.0,
+                        'rationale': '',
+                    }
             except Exception:
-                score = 0.0
-            sentiments.append(score)
+                data = {
+                    'sentiment': 0.0,
+                    'affected_entities': [],
+                    'impact_duration': '',
+                    'confidence_score': 0.0,
+                    'rationale': '',
+                }
+            sentiments.append(data)
         return sentiments
