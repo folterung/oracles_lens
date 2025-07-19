@@ -14,9 +14,9 @@ def gather_flow(query: str = 'stock market', symbol: str = 'AAPL'):
 
     news = news_fetcher.fetch(query)
     texts = [item['title'] for item in news]
-    sentiments = analyzer.analyze(texts)
-    prediction = predictor.predict(sentiments)
-    report_path = reporter.generate_report(news, sentiments, prediction)
+    insights = analyzer.analyze(texts, symbol)
+    prediction = predictor.predict(insights, symbol)
+    report_path = reporter.generate_report(news, insights, prediction, symbol)
     print(f"Report generated at {report_path}")
 
 
