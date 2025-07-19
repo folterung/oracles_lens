@@ -1,5 +1,6 @@
 import os
 import json
+import re
 from openai import OpenAI
 from typing import List, Dict, Any
 
@@ -10,9 +11,22 @@ class SentimentAnalyzer:
             raise ValueError('OPENAI_API_KEY not set')
         self.client = OpenAI(api_key=self.api_key)
 
+    def _parse_json(self, content: str) -> Dict[str, Any] | None:
+        """Return a dict from a JSON string, trying to recover from malformed output."""
+        try:
+            return json.loads(content)
+        except Exception:
+            match = re.search(r"\{.*\}", content, re.S)
+            if match:
+                try:
+                    return json.loads(match.group(0))
+                except Exception:
+                    return None
+            return None
+
     def analyze(self, texts: List[str], symbol: str = '') -> List[Dict[str, Any]]:
         """Return structured sentiment insights for each provided text."""
-        sentiments = []
+        insights: List[Dict[str, Any]] = []
         for text in texts:
             try:
                 response = self.client.chat.completions.create(
@@ -43,33 +57,21 @@ class SentimentAnalyzer:
                     ]
                 )
                 content = response.choices[0].message.content.strip()
-                try:
-                    data = json.loads(content)
-                    # ensure required keys exist even if missing from response
-                    data = {
-                        'sentiment': data.get('sentiment', 0.0),
-                        'affected_entities': data.get('affected_entities', []),
-                        'impact_duration': data.get('impact_duration', ''),
-                        'confidence_score': data.get('confidence_score', 0.0),
-                        'rationale': data.get('rationale', ''),
-                        **({'precedent': data.get('precedent')} if 'precedent' in data else {})
-                    }
-                except Exception:
-                    # fallback structure on parsing failure
-                    data = {
-                        'sentiment': 0.0,
-                        'affected_entities': [],
-                        'impact_duration': '',
-                        'confidence_score': 0.0,
-                        'rationale': '',
-                    }
-            except Exception:
+                parsed = self._parse_json(content)
+                if not parsed:
+                    # skip malformed output instead of crashing
+                    continue
                 data = {
-                    'sentiment': 0.0,
-                    'affected_entities': [],
-                    'impact_duration': '',
-                    'confidence_score': 0.0,
-                    'rationale': '',
+                    'sentiment': float(parsed.get('sentiment', 0.0)),
+                    'affected_entities': parsed.get('affected_entities', []),
+                    'impact_duration': parsed.get('impact_duration', ''),
+                    'confidence_score': float(parsed.get('confidence_score', 0.0)),
+                    'rationale': parsed.get('rationale', ''),
                 }
-            sentiments.append(data)
-        return sentiments
+                if 'precedent' in parsed and parsed['precedent']:
+                    data['precedent'] = parsed['precedent']
+            except Exception:
+                # skip this text if API call fails
+                continue
+            insights.append(data)
+        return insights

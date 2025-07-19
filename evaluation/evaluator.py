@@ -58,13 +58,16 @@ class Evaluator:
 
         predicted_direction = 'up' if predicted_value > 0.05 else 'down' if predicted_value < -0.05 else 'neutral'
         actual_direction = None
+        normalized_delta = None
         if closing_next and closing_prev:
             try:
                 next_val = float(closing_next)
                 prev_val = float(closing_prev)
-                if next_val > prev_val:
+                delta = next_val - prev_val
+                normalized_delta = delta / prev_val if prev_val else 0.0
+                if delta > 0:
                     actual_direction = 'up'
-                elif next_val < prev_val:
+                elif delta < 0:
                     actual_direction = 'down'
                 else:
                     actual_direction = 'neutral'
@@ -81,15 +84,25 @@ class Evaluator:
 
         if closing_prev:
             lines.append(f"Previous close on {report_date.strftime('%Y-%m-%d')}: {closing_prev}")
+
+        if normalized_delta is not None:
+            actual_delta = float(closing_next) - float(closing_prev)
+            lines.append(f"Actual closing delta: {actual_delta:+.4f}")
+
         if actual_direction:
             lines.append(f"Actual direction: {actual_direction}")
         else:
             lines.append("Actual direction: unknown")
 
+        lines.append(f"Prediction score: {predicted_value:+.4f}")
         lines.append(f"Predicted direction: {predicted_direction}")
         if actual_direction:
-            correct = 'yes' if actual_direction == predicted_direction else 'no'
-            lines.append(f"Prediction correct?: {correct}")
+            correct = actual_direction == predicted_direction
+            lines.append(f"Directional accuracy: {correct}")
+            if normalized_delta is not None:
+                delta_error = abs(predicted_value - normalized_delta)
+                lines.append(f"Delta error: {delta_error:.4f}")
+
         filename.write_text('\n'.join(lines))
         self.repo.git.add(str(filename))
         self.repo.index.commit(f"Add evaluation report for {eval_date}")
