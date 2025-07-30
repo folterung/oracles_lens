@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import List, Dict
 import requests
-from git import Repo
+from repo_utils import Committer, GitCommitter
 
 EVAL_DIR = Path('evaluations')
 REPORT_DIR = Path('reports')
@@ -13,13 +13,14 @@ HISTORY_LOG = Path('history/prediction_accuracy_log.jsonl')
 STOCK_API_URL = 'https://www.alphavantage.co/query'
 
 class Evaluator:
-    def __init__(self, stock_api_key: str | None = None):
+    def __init__(self, stock_api_key: str | None = None, committer: Committer | None = None):
         self.stock_api_key = stock_api_key or os.getenv("STOCK_API_KEY")
         if not self.stock_api_key:
             raise ValueError("STOCK_API_KEY not set")
         EVAL_DIR.mkdir(exist_ok=True)
         HISTORY_LOG.parent.mkdir(exist_ok=True)
-        self.repo = Repo(Path(__file__).resolve().parents[1])
+        repo_path = Path(__file__).resolve().parents[1]
+        self.committer = committer or GitCommitter(repo_path)
 
     def _previous_report(self) -> Path:
         reports = sorted(REPORT_DIR.glob("stock_report_*.json"))
@@ -100,7 +101,6 @@ class Evaluator:
             lines.append(f"Accuracy: {ev['accuracy']}")
         filename.write_text("\n".join(lines))
         if commit:
-            self.repo.git.add(str(filename))
-            self.repo.git.add(str(HISTORY_LOG))
-            self.repo.index.commit(f"Add evaluation report for {eval_date}")
+            self.committer.add_and_commit(filename, f"Add evaluation report for {eval_date}")
+            self.committer.add_and_commit(HISTORY_LOG, "Update accuracy history")
         return filename
