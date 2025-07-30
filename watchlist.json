@@ -1,12 +1,52 @@
 [
-  { "symbol": "AAPL" },
-  { "symbol": "MSFT" },
-  { "symbol": "AMZN" },
-  { "symbol": "GOOGL" },
-  { "symbol": "NVDA" },
-  { "symbol": "TSLA" },
-  { "symbol": "NFLX" },
-  { "symbol": "META" },
-  { "symbol": "BABA" },
-  { "symbol": "INTC" }
+  {
+    "symbol": "AAPL",
+    "keywords": ["Apple", "iPhone", "Mac", "AirPods"],
+    "discovered": false
+  },
+  {
+    "symbol": "MSFT",
+    "keywords": ["Microsoft", "Windows", "Azure", "Xbox", "Surface"],
+    "discovered": false
+  },
+  {
+    "symbol": "AMZN",
+    "keywords": ["Amazon", "AWS", "Prime", "Kindle"],
+    "discovered": false
+  },
+  {
+    "symbol": "GOOGL",
+    "keywords": ["Google", "Alphabet", "Android", "YouTube"],
+    "discovered": false
+  },
+  {
+    "symbol": "NVDA",
+    "keywords": ["Nvidia", "GPU", "GeForce", "RTX"],
+    "discovered": false
+  },
+  {
+    "symbol": "TSLA",
+    "keywords": ["Tesla", "Elon Musk", "Model", "Cybertruck"],
+    "discovered": false
+  },
+  {
+    "symbol": "NFLX",
+    "keywords": ["Netflix", "streaming", "Stranger Things"],
+    "discovered": false
+  },
+  {
+    "symbol": "META",
+    "keywords": ["Meta", "Facebook", "Instagram", "WhatsApp"],
+    "discovered": false
+  },
+  {
+    "symbol": "BABA",
+    "keywords": ["Alibaba", "AliExpress", "Taobao"],
+    "discovered": false
+  },
+  {
+    "symbol": "INTC",
+    "keywords": ["Intel", "processor", "Pentium", "Xeon"],
+    "discovered": false
+  }
 ]

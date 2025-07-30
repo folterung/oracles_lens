@@ -1,4 +1,5 @@
 import json
+import logging
 from pathlib import Path
 from typing import List, Dict
 
@@ -11,7 +12,8 @@ def load_watchlist(path: Path = WATCHLIST_PATH) -> List[Dict]:
     if path.exists():
         try:
             return json.loads(path.read_text())
-        except Exception:
+        except Exception as e:
+            logging.exception("Failed to parse watchlist: %s", e)
             return []
     return []
 
@@ -22,30 +24,38 @@ def save_watchlist(data: List[Dict], path: Path = WATCHLIST_PATH) -> None:
 
 def learn_new_stocks(query: str = "stock market") -> None:
     """Discover new stocks from recent news headlines and extend the watchlist."""
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+
     watchlist = load_watchlist()
     known = {item.get("symbol") for item in watchlist}
     fetcher = NewsFetcher()
     articles = fetcher.fetch(query, page_size=20)
 
-    mapping = {
-        "Broadcom": "AVGO",
-        "Adobe": "ADBE",
-        "Qualcomm": "QCOM",
-        "Samsung": "SSNLF",
-        "Spotify": "SPOT",
-        "Intel": "INTC",
+    mapping: Dict[str, tuple[str, List[str]]] = {
+        "Broadcom": ("AVGO", ["Broadcom", "VMware"]),
+        "Adobe": ("ADBE", ["Adobe", "Photoshop"]),
+        "Qualcomm": ("QCOM", ["Qualcomm", "Snapdragon"]),
+        "Samsung": ("SSNLF", ["Samsung", "Galaxy"]),
+        "Spotify": ("SPOT", ["Spotify"]),
+        "Intel": ("INTC", ["Intel", "processor"]),
     }
 
     added = []
     for art in articles:
         title = art.get("title", "")
-        for name, symbol in mapping.items():
+        for name, (symbol, keywords) in mapping.items():
             if symbol in known:
                 continue
             if name.lower() in title.lower():
-                watchlist.append({"symbol": symbol, "discovery_reason": title})
+                watchlist.append({
+                    "symbol": symbol,
+                    "keywords": keywords,
+                    "discovered": True,
+                    "discovery_headline": title,
+                })
                 known.add(symbol)
                 added.append(symbol)
+                logging.info("Discovered new stock %s from headline: %s", symbol, title)
                 break
 
     if added:

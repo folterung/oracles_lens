@@ -1,0 +1,165 @@
+{
+  "date": "2025-07-30",
+  "results": [
+    {
+      "symbol": "AAPL",
+      "headlines": [
+        "Apple (AAPL) iPhone Production Soars as India Gains Prominence Amid Slowing U.S. Demand",
+        "Apple Inc. (AAPL): People Are Tired Of The Stock Buybacks, Says Jim Cramer",
+        "Apple Is Going To Surprise Wall Street, Says Tom Lee, As iPhone Maker 'Could Be Quietly Ready To Pounce On AI'",
+        "Here's How to Listen to Apple's Upcoming Earnings Call With Tim Cook"
+      ],
+      "prediction": {
+        "score": -0.05,
+        "direction": "down",
+        "confidence": {
+          "label": "Medium",
+          "value": 62.000000000000014
+        }
+      }
+    },
+    {
+      "symbol": "MSFT",
+      "headlines": [
+        "Investors Heavily Search Microsoft Corporation (MSFT): Here is What You Need to Know",
+        "Dear Microsoft Stock Fans, Mark Your Calendars for July 30"
+      ],
+      "prediction": {
+        "score": -0.1,
+        "direction": "down",
+        "confidence": {
+          "label": "Medium",
+          "value": 52.0
+        }
+      }
+    },
+    {
+      "symbol": "AMZN",
+      "headlines": [
+        "Oracle soars, Amazon sinks, Home Depot's $4.3B acquisition",
+        "Buy AMZN Stock At $230?",
+        "Amazon.com, Inc. (AMZN): A Bull Case Theory"
+      ],
+      "prediction": {
+        "score": -0.03333333333333333,
+        "direction": "down",
+        "confidence": {
+          "label": "Medium",
+          "value": 53.333333333333336
+        }
+      }
+    },
+    {
+      "symbol": "GOOGL",
+      "headlines": [
+        "Elon Musk's Starlink Faces A New Alphabet Rival: This Google-Backed Startup Wants Federal Billions To Beam Internet Through Air",
+        "Nvidia, Microsoft, or Alphabet: Which AI Stock Giant Holds the Highest Upside? Analysts Weigh In",
+        "Alphabet Reports Q2 Earnings July 23. Time to Buy GOOGL Stock?"
+      ],
+      "prediction": {
+        "score": 0.05606060606060606,
+        "direction": "up",
+        "confidence": {
+          "label": "Medium",
+          "value": 54.24242424242425
+        }
+      }
+    },
+    {
+      "symbol": "NVDA",
+      "headlines": [
+        "NVDA Stock Price Prediction: Where Nvidia Could Be by 2025, 2026, 2030",
+        "Major analyst revamps Nvidia stock price target after China surprise",
+        "Nvidia Rides the AI Wave to Become the World\u2019s First $4 Trillion Company"
+      ],
+      "prediction": {
+        "score": 0.10416666666666667,
+        "direction": "up",
+        "confidence": {
+          "label": "Medium",
+          "value": 56.16666666666668
+        }
+      }
+    },
+    {
+      "symbol": "TSLA",
+      "headlines": [
+        "Tesla (TSLA) Stock Is Up, What You Need To Know",
+        "Tesla stock needs 'Elon Musk magic,' expert says",
+        "Wall Street is eyeing more challenges for Tesla heading into its 2nd-quarter earnings report",
+        "It\u2019s Time for Elon Musk to Step Down as Tesla CEO"
+      ],
+      "prediction": {
+        "score": 0.2111111111111111,
+        "direction": "up",
+        "confidence": {
+          "label": "High",
+          "value": 67.55555555555556
+        }
+      }
+    },
+    {
+      "symbol": "NFLX",
+      "headlines": [
+        "Netflix Stock To $500?",
+        "Investor Confidence in Continued Growth Boosted Netflix (NFLX) in Q2",
+        "Here\u2019s What Supports Netflix\u2019s (NFLX) Long-Term Growth",
+        "Analyst Highlights Netflix\u2019s (NFLX) \u2018Biggest Advantage\u2019 \u2013 Can The Stock Keep Rising Amid Competition?",
+        "One tech giant is getting buried in the record-setting stock market"
+      ],
+      "prediction": {
+        "score": 0.0,
+        "direction": "neutral",
+        "confidence": {
+          "label": "Medium",
+          "value": 54.53658536585366
+        }
+      }
+    },
+    {
+      "symbol": "META",
+      "headlines": [],
+      "prediction": {
+        "score": 0.0,
+        "direction": "neutral",
+        "confidence": {
+          "label": "Low",
+          "value": 0.0
+        }
+      }
+    },
+    {
+      "symbol": "BABA",
+      "headlines": [
+        "Alibaba Stock Could Bounce Despite Trade Tensions",
+        "Alibaba Group Holdings (BABA) Fell on Imposing ~50% Tariff on Chinese goods"
+      ],
+      "prediction": {
+        "score": 0.0,
+        "direction": "neutral",
+        "confidence": {
+          "label": "Medium",
+          "value": 48.00000000000001
+        }
+      }
+    },
+    {
+      "symbol": "INTC",
+      "headlines": [
+        "Morgan Stanley: Intel (INTC) Next-Gen Foundry Faces 'Minimal' Hits",
+        "Intel Q2 beat: Company's turnaround still a 'longer-term story'",
+        "Is Intel Stock A Buy Now?",
+        "What You Need to Know Ahead of Intel's Earnings Release",
+        "Intel Is Kicking Off a Major Layoffs Push. What Do the Job Cuts Mean for INTC Stock?"
+      ],
+      "prediction": {
+        "score": -0.045,
+        "direction": "down",
+        "confidence": {
+          "label": "Medium",
+          "value": 61.80000000000001
+        }
+      }
+    }
+  ]
+}

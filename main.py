@@ -1,5 +1,6 @@
 import sys
 import json
+import logging
 from pathlib import Path
 from typing import List, Dict
 
@@ -20,8 +21,8 @@ def _load_watchlist(path: str = "watchlist.json") -> List[Dict]:
         data = json.loads(p.read_text())
         if isinstance(data, list):
             return data
-    except Exception:
-        pass
+    except Exception as e:
+        logging.exception("Failed to parse watchlist: %s", e)
     return []
 
 
@@ -31,25 +32,57 @@ def _save_watchlist(entries: List[Dict], path: str = "watchlist.json") -> None:
 
 def gather_flow(query: str = "stock market") -> None:
     """Generate prediction reports for all symbols in the watchlist."""
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
     entries = _load_watchlist()
-    symbols = [e.get("symbol") for e in entries if e.get("symbol")]
-    if not symbols:
+    if not entries:
         print("Watchlist is empty")
         return
 
+    symbol_keywords = {e.get("symbol"): e.get("keywords", []) for e in entries if e.get("symbol")}
+
     fetcher = NewsFetcher()
-    matcher = RelevanceMatcher()
+    matcher = RelevanceMatcher(keyword_map=symbol_keywords)
     analyzer = SentimentAnalyzer()
     writer = ReportWriter()
 
-    for symbol in symbols:
-        news = fetcher.fetch(f"{symbol} {query}")
+    results = []
+    for entry in entries:
+        symbol = entry.get("symbol")
+        if not symbol:
+            continue
+        logging.info("Processing %s", symbol)
+        try:
+            news = fetcher.fetch(f"{symbol} {query}")
+        except Exception as e:
+            logging.exception("Failed to fetch news for %s: %s", symbol, e)
+            news = []
+
         matched = matcher.match_headlines(news, symbol)
-        analyzed = analyzer.analyze(matched)
+        try:
+            analyzed = analyzer.analyze(matched)
+        except Exception as e:
+            logging.exception("Sentiment analysis failed for %s: %s", symbol, e)
+            analyzed = []
+
         weighted = analyzer.weighted_score(analyzed)
         confidence = analyzer.confidence(analyzed)
-        report_path = writer.write(symbol, analyzed, weighted, confidence)
-        print(f"Report generated for {symbol} at {report_path}")
+        direction = "up" if weighted > 0 else "down" if weighted < 0 else "neutral"
+
+        results.append({
+            "symbol": symbol,
+            "headlines": [m.get("title", "") for m in matched],
+            "prediction": {
+                "score": weighted,
+                "direction": direction,
+                "confidence": {
+                    "label": confidence[1],
+                    "value": confidence[0],
+                },
+            },
+        })
+
+    report_path = writer.write(results)
+    print(f"Report generated at {report_path}")
 
 
 def evaluate_flow(symbol: str | None = None):
