@@ -47,7 +47,7 @@ Future enhancement:
 - Tie predictions to stock price deltas over time
 - Track prediction performance trends over days/weeks
 
-### `!forecast`
+### `!stock_forecast`
 This command performs the **full daily analysis cycle**, including gathering prediction data and evaluating previous forecasts. It is a one-shot operation designed for ease of use and automation.
 
 Responsibilities:
@@ -68,8 +68,7 @@ Responsibilities:
      - `evaluation_YYYY-MM-DD.json` with per-symbol metrics
      - Optional `evaluation_summary.txt` (plain-text breakdown)
 
-Behavior:
-- `!forecast` should log any fetch, prediction, or evaluation failures
+- `!stock_forecast` should log any fetch, prediction, or evaluation failures
 - If no past report exists to evaluate, skip the evaluation step gracefully
 - Designed to run once per day, ideally via automation or cron
 
