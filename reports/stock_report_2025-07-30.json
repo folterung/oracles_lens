@@ -3,6 +3,7 @@
   "results": [
     {
       "symbol": "AAPL",
+      "company": "Apple",
       "headlines": [
         "Apple (AAPL) iPhone Production Soars as India Gains Prominence Amid Slowing U.S. Demand",
         "Apple Inc. (AAPL): People Are Tired Of The Stock Buybacks, Says Jim Cramer",
@@ -20,6 +21,7 @@
     },
     {
       "symbol": "MSFT",
+      "company": "Microsoft",
       "headlines": [
         "Investors Heavily Search Microsoft Corporation (MSFT): Here is What You Need to Know",
         "Dear Microsoft Stock Fans, Mark Your Calendars for July 30"
@@ -35,6 +37,7 @@
     },
     {
       "symbol": "AMZN",
+      "company": "Amazon",
       "headlines": [
         "Oracle soars, Amazon sinks, Home Depot's $4.3B acquisition",
         "Buy AMZN Stock At $230?",
@@ -51,6 +54,7 @@
     },
     {
       "symbol": "GOOGL",
+      "company": "Google",
       "headlines": [
         "Elon Musk's Starlink Faces A New Alphabet Rival: This Google-Backed Startup Wants Federal Billions To Beam Internet Through Air",
         "Nvidia, Microsoft, or Alphabet: Which AI Stock Giant Holds the Highest Upside? Analysts Weigh In",
@@ -67,6 +71,7 @@
     },
     {
       "symbol": "NVDA",
+      "company": "Nvidia",
       "headlines": [
         "NVDA Stock Price Prediction: Where Nvidia Could Be by 2025, 2026, 2030",
         "Major analyst revamps Nvidia stock price target after China surprise",
@@ -83,6 +88,7 @@
     },
     {
       "symbol": "TSLA",
+      "company": "Tesla",
       "headlines": [
         "Tesla (TSLA) Stock Is Up, What You Need To Know",
         "Tesla stock needs 'Elon Musk magic,' expert says",
@@ -100,6 +106,7 @@
     },
     {
       "symbol": "NFLX",
+      "company": "Netflix",
       "headlines": [
         "Netflix Stock To $500?",
         "Investor Confidence in Continued Growth Boosted Netflix (NFLX) in Q2",
@@ -118,6 +125,7 @@
     },
     {
       "symbol": "META",
+      "company": "Meta",
       "headlines": [],
       "prediction": {
         "score": 0.0,
@@ -130,6 +138,7 @@
     },
     {
       "symbol": "BABA",
+      "company": "Alibaba",
       "headlines": [
         "Alibaba Stock Could Bounce Despite Trade Tensions",
         "Alibaba Group Holdings (BABA) Fell on Imposing ~50% Tariff on Chinese goods"
@@ -145,6 +154,7 @@
     },
     {
       "symbol": "INTC",
+      "company": "Intel",
       "headlines": [
         "Morgan Stanley: Intel (INTC) Next-Gen Foundry Faces 'Minimal' Hits",
         "Intel Q2 beat: Company's turnaround still a 'longer-term story'",
