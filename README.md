@@ -20,6 +20,9 @@ Fetch recent news, analyze sentiment, generate a prediction report and commit it
 ### `evaluate`
 Find the latest report, fetch real market data, evaluate accuracy, and commit an evaluation file under `evaluations/`.
 
+### `forecast`
+Run both the gather and evaluate phases in one shot. This is useful for automation or daily cron jobs.
+
 ## Example
 ```
 $ python main.py gather

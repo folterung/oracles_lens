@@ -99,15 +99,26 @@ def evaluate_flow(symbol: str | None = None):
     print(f"Evaluation report generated at {eval_path}")
 
 
+def forecast_flow() -> None:
+    """Run gather and then evaluate previous predictions."""
+    gather_flow()
+    try:
+        evaluate_flow()
+    except Exception as e:
+        logging.exception("Forecast evaluation failed: %s", e)
+
+
 def main():
     if len(sys.argv) < 2:
-        print('Usage: python main.py [gather|evaluate|learn_new_stocks]')
+        print('Usage: python main.py [gather|evaluate|forecast|learn_new_stocks]')
         return
     command = sys.argv[1]
     if command == 'gather':
         gather_flow()
     elif command == 'evaluate':
         evaluate_flow()
+    elif command == 'forecast':
+        forecast_flow()
     elif command == 'learn_new_stocks':
         learn_new_stocks()
     else:
