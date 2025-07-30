@@ -1,23 +1,38 @@
 import sys
+import json
 from pathlib import Path
-from typing import List
+from typing import List, Dict
 
 from gather.news_fetcher import NewsFetcher
 from gather.sentiment_analyzer import SentimentAnalyzer
 from evaluation.evaluator import Evaluator
 from relevance_matcher import RelevanceMatcher
 from report_writer import ReportWriter
+from learn_new_stocks import learn_new_stocks
 
 
-def _load_watchlist(path: str = "watchlist.txt") -> List[str]:
-    if not Path(path).exists():
+def _load_watchlist(path: str = "watchlist.json") -> List[Dict]:
+    """Load watchlist entries from JSON."""
+    p = Path(path)
+    if not p.exists():
         return []
-    return [line.strip() for line in Path(path).read_text().splitlines() if line.strip()]
+    try:
+        data = json.loads(p.read_text())
+        if isinstance(data, list):
+            return data
+    except Exception:
+        pass
+    return []
 
 
-def gather_flow(query: str = "stock market"):
+def _save_watchlist(entries: List[Dict], path: str = "watchlist.json") -> None:
+    Path(path).write_text(json.dumps(entries, indent=2))
+
+
+def gather_flow(query: str = "stock market") -> None:
     """Generate prediction reports for all symbols in the watchlist."""
-    symbols = _load_watchlist()
+    entries = _load_watchlist()
+    symbols = [e.get("symbol") for e in entries if e.get("symbol")]
     if not symbols:
         print("Watchlist is empty")
         return
@@ -39,8 +54,9 @@ def gather_flow(query: str = "stock market"):
 
 def evaluate_flow(symbol: str | None = None):
     if symbol is None:
-        symbols = _load_watchlist()
-        symbol = symbols[0] if symbols else "AAPL"
+        entries = _load_watchlist()
+        syms = [e.get("symbol") for e in entries if e.get("symbol")]
+        symbol = syms[0] if syms else "AAPL"
     evaluator = Evaluator()
     eval_path = evaluator.evaluate(symbol)
     print(f"Evaluation report generated at {eval_path}")
@@ -48,13 +64,15 @@ def evaluate_flow(symbol: str | None = None):
 
 def main():
     if len(sys.argv) < 2:
-        print('Usage: python main.py [gather|evaluate]')
+        print('Usage: python main.py [gather|evaluate|learn_new_stocks]')
         return
     command = sys.argv[1]
     if command == 'gather':
         gather_flow()
     elif command == 'evaluate':
         evaluate_flow()
+    elif command == 'learn_new_stocks':
+        learn_new_stocks()
     else:
         print(f'Unknown command: {command}')
 
