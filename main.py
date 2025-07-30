@@ -39,6 +39,7 @@ def gather_flow(query: str = "stock market") -> None:
         return
 
     symbol_keywords = {e.get("symbol"): e.get("keywords", []) for e in entries if e.get("symbol")}
+    symbol_company = {e.get("symbol"): (e.get("keywords") or [""])[0] for e in entries if e.get("symbol")}
 
     fetcher = NewsFetcher()
     matcher = RelevanceMatcher(keyword_map=symbol_keywords)
@@ -70,6 +71,7 @@ def gather_flow(query: str = "stock market") -> None:
 
         results.append({
             "symbol": symbol,
+            "company": symbol_company.get(symbol, ""),
             "headlines": [m.get("title", "") for m in matched],
             "prediction": {
                 "score": weighted,
@@ -82,7 +84,9 @@ def gather_flow(query: str = "stock market") -> None:
         })
 
     report_path = writer.write(results)
+    summary_path = writer.write_summary(results)
     print(f"Report generated at {report_path}")
+    print(f"Summary generated at {summary_path}")
 
 
 def evaluate_flow(symbol: str | None = None):
