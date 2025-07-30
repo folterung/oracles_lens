@@ -47,6 +47,37 @@ Future enhancement:
 - Tie predictions to stock price deltas over time
 - Track prediction performance trends over days/weeks
 
+### `!forecast`
+This command performs the **full daily analysis cycle**, including gathering prediction data and evaluating previous forecasts. It is a one-shot operation designed for ease of use and automation.
+
+Responsibilities:
+1. **Gather Phase**
+   - Load `watchlist.json` and process all listed stock symbols
+   - Fetch relevant news headlines (real or stubbed)
+   - Use `relevance_matcher.py` to associate headlines with symbols
+   - Run sentiment analysis on relevant headlines using OpenAI API
+   - Compute weighted sentiment and confidence scores
+   - Output:
+     - `stock_report_YYYY-MM-DD.json`
+     - `stock_summary_YYYY-MM-DD.txt`
+
+2. **Evaluate Phase**
+   - Attempt to evaluate predictions from the most recent previous day (e.g., `stock_report_YYYY-MM-DD-1.json`)
+   - Compare predicted directions to actual stock movements (stubbed or live)
+   - Generate:
+     - `evaluation_YYYY-MM-DD.json` with per-symbol metrics
+     - Optional `evaluation_summary.txt` (plain-text breakdown)
+
+Behavior:
+- `!forecast` should log any fetch, prediction, or evaluation failures
+- If no past report exists to evaluate, skip the evaluation step gracefully
+- Designed to run once per day, ideally via automation or cron
+
+Future enhancements:
+- Add Slack or email summary notifications
+- Automatically archive reports and evaluations
+- Add configurable evaluation delay (e.g., evaluate predictions after 2–3 days)
+
 ---
 
 ## 📦 Files and Structure
