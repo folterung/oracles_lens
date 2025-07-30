@@ -16,22 +16,22 @@ class ReportWriter:
 
     def write(self, symbol: str, items: List[Dict], weighted_score: float, confidence: Tuple[float, str]) -> Path:
         date_str = datetime.utcnow().strftime("%Y-%m-%d")
-        filename = REPORT_DIR / f"prediction-{symbol}-{date_str}.md"
-        lines = [f"# Stock Prediction Report - {date_str}", f"**Symbol:** {symbol}", ""]
-        lines.append("## Top Matched Headlines")
+        filename = REPORT_DIR / f"{date_str}_{symbol}_report.txt"
+        lines = [f"# Stock Prediction Report - {date_str}", f"Symbol: {symbol}", ""]
+        lines.append("Top Headlines:")
         top_items = items[:5]
         for it in top_items:
-            lines.append(f"- \"{it['title']}\"  ")
+            lines.append(f"- \"{it['title']}\"")
             lines.append(
-                f"  → Matched keyword: \"{it['keyword']}\", Relevance: {it['relevance_score']:.2f}, Sentiment: {it['sentiment']:+.2f}"
+                f"  → Matched: \"{it['keyword']}\", Relevance: {it['relevance_score']:.2f}, Sentiment: {it['sentiment']:+.2f}"
             )
         lines.append("")
-        lines.append("## Prediction")
-        direction = "\U0001F4C8 Positive" if weighted_score > 0 else "\U0001F4C9 Negative" if weighted_score < 0 else "\u2796 Neutral"
+        direction_icon = '📈' if weighted_score > 0 else '📉' if weighted_score < 0 else '➖'
+        direction_word = 'Upward' if weighted_score > 0 else 'Downward' if weighted_score < 0 else 'Sideways'
         conf_value = round(confidence[0])
-        lines.append(f"→ Weighted Score: {weighted_score:+.2f}")
-        lines.append(f"→ Final Direction: {direction}")
-        lines.append(f"→ Confidence: {conf_value}% ({confidence[1]})")
+        lines.append(f"Prediction: {weighted_score:+.2f}")
+        lines.append(f"Direction: {direction_icon} {direction_word}")
+        lines.append(f"Confidence: {conf_value}% ({confidence[1]})")
         filename.write_text("\n".join(lines) + "\n")
         self.repo.git.add(str(filename))
         self.repo.index.commit(f"Add prediction report for {symbol} on {date_str}")
