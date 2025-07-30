@@ -1,0 +1,137 @@
+----------------------------------------
+Symbol: TSLA (Tesla)
+
+Top Headline:
+- "Tesla (TSLA) Stock Is Up, What You Need To Know" → mixed sentiment
+- "Tesla stock needs 'Elon Musk magic,' expert says" → positive sentiment
+
+Sentiment Score: +0.21
+Confidence: 68% (High)
+
+📈 Recommendation: BUY
+💡 Estimated Turnover: 2-3 days
+Insight: Positive news flow may drive short-term gains.
+
+----------------------------------------
+Symbol: AAPL (Apple)
+
+Top Headline:
+- "Apple (AAPL) iPhone Production Soars as India Gains Prominence Amid Slowing U.S. Demand" → mixed sentiment
+- "Apple Inc. (AAPL): People Are Tired Of The Stock Buybacks, Says Jim Cramer" → negative sentiment
+
+Sentiment Score: -0.05
+Confidence: 62% (Medium)
+
+➖ Recommendation: HOLD
+💡 Estimated Turnover: 4-7 days
+Insight: Mixed outlook indicates waiting for clarity.
+
+----------------------------------------
+Symbol: MSFT (Microsoft)
+
+Top Headline:
+- "Investors Heavily Search Microsoft Corporation (MSFT): Here is What You Need to Know" → negative sentiment
+- "Dear Microsoft Stock Fans, Mark Your Calendars for July 30" → mixed sentiment
+
+Sentiment Score: -0.10
+Confidence: 52% (Medium)
+
+➖ Recommendation: HOLD
+💡 Estimated Turnover: 4-7 days
+Insight: Mixed outlook indicates waiting for clarity.
+
+----------------------------------------
+Symbol: AMZN (Amazon)
+
+Top Headline:
+- "Oracle soars, Amazon sinks, Home Depot's $4.3B acquisition" → negative sentiment
+- "Buy AMZN Stock At $230?" → mixed sentiment
+
+Sentiment Score: -0.03
+Confidence: 53% (Medium)
+
+➖ Recommendation: HOLD
+💡 Estimated Turnover: 4-7 days
+Insight: Mixed outlook indicates waiting for clarity.
+
+----------------------------------------
+Symbol: GOOGL (Google)
+
+Top Headline:
+- "Elon Musk's Starlink Faces A New Alphabet Rival: This Google-Backed Startup Wants Federal Billions To Beam Internet Through Air" → positive sentiment
+- "Nvidia, Microsoft, or Alphabet: Which AI Stock Giant Holds the Highest Upside? Analysts Weigh In" → mixed sentiment
+
+Sentiment Score: +0.06
+Confidence: 54% (Medium)
+
+➖ Recommendation: HOLD
+💡 Estimated Turnover: 4-7 days
+Insight: Mixed outlook indicates waiting for clarity.
+
+----------------------------------------
+Symbol: NVDA (Nvidia)
+
+Top Headline:
+- "NVDA Stock Price Prediction: Where Nvidia Could Be by 2025, 2026, 2030" → mixed sentiment
+- "Major analyst revamps Nvidia stock price target after China surprise" → positive sentiment
+
+Sentiment Score: +0.10
+Confidence: 56% (Medium)
+
+➖ Recommendation: HOLD
+💡 Estimated Turnover: 4-7 days
+Insight: Mixed outlook indicates waiting for clarity.
+
+----------------------------------------
+Symbol: NFLX (Netflix)
+
+Top Headline:
+- "Netflix Stock To $500?" → mixed sentiment
+- "Investor Confidence in Continued Growth Boosted Netflix (NFLX) in Q2" → mixed sentiment
+
+Sentiment Score: +0.00
+Confidence: 55% (Medium)
+
+➖ Recommendation: HOLD
+💡 Estimated Turnover: 4-7 days
+Insight: Mixed outlook indicates waiting for clarity.
+
+----------------------------------------
+Symbol: BABA (Alibaba)
+
+Top Headline:
+- "Alibaba Stock Could Bounce Despite Trade Tensions" → mixed sentiment
+- "Alibaba Group Holdings (BABA) Fell on Imposing ~50% Tariff on Chinese goods" → mixed sentiment
+
+Sentiment Score: +0.00
+Confidence: 48% (Medium)
+
+➖ Recommendation: HOLD
+💡 Estimated Turnover: 4-7 days
+Insight: Mixed outlook indicates waiting for clarity.
+
+----------------------------------------
+Symbol: INTC (Intel)
+
+Top Headline:
+- "Morgan Stanley: Intel (INTC) Next-Gen Foundry Faces 'Minimal' Hits" → negative sentiment
+- "Intel Q2 beat: Company's turnaround still a 'longer-term story'" → mixed sentiment
+
+Sentiment Score: -0.04
+Confidence: 62% (Medium)
+
+➖ Recommendation: HOLD
+💡 Estimated Turnover: 4-7 days
+Insight: Mixed outlook indicates waiting for clarity.
+
+----------------------------------------
+Symbol: META (Meta)
+
+Sentiment Score: +0.00
+Confidence: 0% (Low)
+
+🔻 Recommendation: AVOID
+💡 Estimated Turnover: 7-10 days
+Insight: Negative signals suggest caution in the short term.
+
+----------------------------------------
