@@ -9,25 +9,43 @@ This project empowers a Codex agent to:
 
 ---
 
-## 🔁 Commands
+## ⚙️ Commands
 
 ### `!gather`
-- Collect recent market news and financial data.
-- Run prediction algorithms over selected stocks.
-- Summarize logic and predictions in a structured Markdown report.
-- Embed Mermaid diagrams (flowcharts, confidence maps, etc.)
-- Save to `reports/prediction-YYYY-MM-DD.md`.
-- Commit the file using Git.
+This command performs all necessary steps to prepare and generate the daily stock forecast. It acts as the full pipeline initializer and orchestrator.
+
+Responsibilities:
+- Read stock symbols from `watchlist.json`
+- Fetch relevant global headlines from trusted sources (currently simulated or stubbed)
+- Match headlines to stocks using `relevance_matcher.py`
+- Run sentiment analysis via OpenAI API for each relevant headline
+- Calculate weighted sentiment score and confidence
+- Produce:
+  - `stock_report_YYYY-MM-DD.json`: machine-readable summary
+  - `stock_summary_YYYY-MM-DD.txt`: human-readable investment recommendations
+- Update logs to include run metadata (time, symbols analyzed, success/failure count)
+
+Future enhancement:
+- Automatically trigger `learn_new_stocks.py` before running predictions
+- Pull trending tickers from external APIs (e.g. Yahoo, Twitter, financial news)
 
 ### `!evaluate`
-- Look up the most recent prediction file.
-- Compare predictions with actual market performance.
-- Write evaluation as `evaluations/evaluation-YYYY-MM-DD.md`.
-- Include:
-  - Accuracy of predictions.
-  - Explanation of variance.
-  - Notes for improvement.
-- Commit changes automatically.
+This command retroactively evaluates the predictions made by a previous run.
+
+Responsibilities:
+- Load the relevant `stock_report_YYYY-MM-DD.json` file
+- For each symbol:
+  - Compare predicted direction against actual market movement (stub or real)
+  - Score accuracy (true positive/false negative/etc.)
+  - Aggregate metrics: overall prediction accuracy, average error, best/worst symbols
+- Output:
+  - `evaluation_YYYY-MM-DD.json`: evaluation metrics per stock
+  - (Optional) `evaluation_summary.txt`: human-readable accuracy breakdown
+- Update logs with evaluation results
+
+Future enhancement:
+- Tie predictions to stock price deltas over time
+- Track prediction performance trends over days/weeks
 
 ---
 
@@ -35,8 +53,8 @@ This project empowers a Codex agent to:
 
 - `core/`: Main agent orchestration logic
 - `data/`: Fetched raw or cached data
-- `reports/`: Markdown prediction reports
-- `evaluations/`: Evaluation and retrospectives
+- `reports/`: JSON prediction reports and text summaries
+- `evaluations/`: Evaluation results and retrospectives
 - `notebooks/`: Experimental analysis
 
 ## 🔄 Output Generation Responsibilities
