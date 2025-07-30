@@ -15,6 +15,36 @@ from report_writer import ReportWriter
 from learn_new_stocks import learn_new_stocks
 
 
+def apply_metrics_to_summary(summary_path: Path, metrics: Dict[str, Dict]):
+    """Insert accuracy and calibration info into the summary file."""
+    if not summary_path.exists():
+        return
+    lines = summary_path.read_text().splitlines()
+    new_lines: List[str] = []
+    current_symbol: str | None = None
+    for line in lines:
+        new_lines.append(line)
+        if line.startswith("Symbol:"):
+            parts = line.split()
+            current_symbol = parts[1] if len(parts) > 1 else None
+        if line.startswith("Insight:"):
+            metric = metrics.get(current_symbol or "")
+            new_lines.append("")
+            if metric and metric.get("accuracy_rate") is not None:
+                acc_pct = metric["accuracy_rate"] * 100
+                new_lines.append(f"Accuracy trend (last 7 days): {acc_pct:.0f}% accurate")
+                avg_conf = metric.get("avg_confidence", 0)
+                calib = metric.get("calibration", "")
+                new_lines.append(
+                    f"Confidence calibration: Avg {avg_conf:.0f}% confidence → {acc_pct:.0f}% accuracy → {calib}"
+                )
+            else:
+                new_lines.append("Accuracy trend (last 7 days): no data")
+                new_lines.append("Confidence calibration: no data")
+            new_lines.append("")
+    summary_path.write_text("\n".join(new_lines))
+
+
 def _load_watchlist(path: str = "watchlist.json") -> List[Dict]:
     """Load watchlist entries from JSON."""
     p = Path(path)
@@ -94,12 +124,12 @@ def gather_flow(query: str = "stock market", commit: bool = True):
 
 
 def evaluate_flow(symbol: str | None = None, commit: bool = True):
-    if symbol is None:
-        entries = _load_watchlist()
-        syms = [e.get("symbol") for e in entries if e.get("symbol")]
-        symbol = syms[0] if syms else "AAPL"
+    entries = _load_watchlist()
+    symbols = [e.get("symbol") for e in entries if e.get("symbol")]
+    if symbol:
+        symbols = [symbol]
     evaluator = Evaluator()
-    eval_path = evaluator.evaluate(symbol, commit=commit)
+    eval_path = evaluator.evaluate(symbols, commit=commit)
     print(f"Evaluation report generated at {eval_path}")
     return eval_path
 
@@ -113,6 +143,20 @@ def stock_forecast_flow() -> None:
     except Exception as e:
         logging.exception("Forecast evaluation failed: %s", e)
 
+    metrics = {}
+    suggestions_path = None
+    try:
+        from prediction_adjuster import generate_adjustment_file
+        metrics, suggestions_path = generate_adjustment_file()
+    except Exception as e:
+        logging.exception("Adjustment generation failed: %s", e)
+
+    try:
+        if metrics:
+            apply_metrics_to_summary(summary_path, metrics)
+    except Exception as e:
+        logging.exception("Failed to update summary with metrics: %s", e)
+
     repo = Repo(Path(__file__).resolve().parent)
     repo.git.add(str(report_path))
     repo.git.add(str(summary_path))
@@ -125,6 +169,11 @@ def stock_forecast_flow() -> None:
         repo.git.add(str(eval_json))
     if eval_summary.exists():
         repo.git.add(str(eval_summary))
+    log_file = Path('history/prediction_accuracy_log.jsonl')
+    if log_file.exists():
+        repo.git.add(str(log_file))
+    if suggestions_path and Path(suggestions_path).exists():
+        repo.git.add(str(suggestions_path))
     repo.index.commit(f"Add forecast results for {date_str}")
 
 
