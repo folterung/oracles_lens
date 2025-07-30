@@ -2,3 +2,5 @@ requests
 openai
 GitPython
 python-dotenv
+textblob
+python-dateutil
