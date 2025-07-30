@@ -1,25 +1,19 @@
-import json
 import logging
 from pathlib import Path
 from typing import List, Dict
 
 from gather.news_fetcher import NewsFetcher
+from watchlist import WatchlistManager
 
 WATCHLIST_PATH = Path("watchlist.json")
 
 
 def load_watchlist(path: Path = WATCHLIST_PATH) -> List[Dict]:
-    if path.exists():
-        try:
-            return json.loads(path.read_text())
-        except Exception as e:
-            logging.exception("Failed to parse watchlist: %s", e)
-            return []
-    return []
+    return WatchlistManager(path).load()
 
 
 def save_watchlist(data: List[Dict], path: Path = WATCHLIST_PATH) -> None:
-    path.write_text(json.dumps(data, indent=2))
+    WatchlistManager(path).save(data)
 
 
 def learn_new_stocks(query: str = "stock market") -> None:

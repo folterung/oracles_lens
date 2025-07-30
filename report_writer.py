@@ -5,7 +5,7 @@ from typing import List, Dict
 
 from textblob import TextBlob
 
-from git import Repo
+from repo_utils import Committer, GitCommitter
 
 REPORT_DIR = Path("reports")
 
@@ -13,9 +13,29 @@ REPORT_DIR = Path("reports")
 class ReportWriter:
     """Generate aggregated JSON prediction reports."""
 
-    def __init__(self):
+    def __init__(self, committer: Committer | None = None):
         REPORT_DIR.mkdir(exist_ok=True)
-        self.repo = Repo(Path(__file__).resolve().parent)
+        repo_path = Path(__file__).resolve().parent
+        self.committer = committer or GitCommitter(repo_path)
+
+    def recommendation_and_turnover(self, sent: float, conf_val: float, conf_label: str) -> tuple[str, str]:
+        """Return recommendation and expected turnover period."""
+        if sent <= -0.2 or conf_val < 30:
+            rec = "AVOID"
+        elif sent >= 0.2 and conf_val >= 60:
+            rec = "BUY"
+        else:
+            rec = "HOLD"
+
+        turnover = "Indeterminate"
+        label = conf_label.lower()
+        if label == "high":
+            turnover = "2-3 days"
+        elif label == "medium":
+            turnover = "4-7 days"
+        elif label == "low":
+            turnover = "7-10 days"
+        return rec, turnover
 
     def write(self, results: List[Dict], commit: bool = True) -> Path:
         date_str = datetime.utcnow().strftime("%Y-%m-%d")
@@ -26,8 +46,7 @@ class ReportWriter:
         }
         filename.write_text(json.dumps(payload, indent=2))
         if commit:
-            self.repo.git.add(str(filename))
-            self.repo.index.commit(f"Add stock report for {date_str}")
+            self.committer.add_and_commit(filename, f"Add stock report for {date_str}")
         return filename
 
     def write_summary(self, results: List[Dict], commit: bool = True) -> Path:
@@ -36,22 +55,7 @@ class ReportWriter:
         filename = REPORT_DIR / f"stock_summary_{date_str}.txt"
 
         def rec_and_turnover(sent: float, conf_val: float, conf_label: str) -> tuple[str, str]:
-            if sent <= -0.2 or conf_val < 30:
-                rec = "AVOID"
-            elif sent >= 0.2 and conf_val >= 60:
-                rec = "BUY"
-            else:
-                rec = "HOLD"
-
-            turnover = "Indeterminate"
-            label = conf_label.lower()
-            if label == "high":
-                turnover = "2-3 days"
-            elif label == "medium":
-                turnover = "4-7 days"
-            elif label == "low":
-                turnover = "7-10 days"
-            return rec, turnover
+            return self.recommendation_and_turnover(sent, conf_val, conf_label)
 
         order = {"BUY": 0, "HOLD": 1, "AVOID": 2}
 
@@ -126,6 +130,5 @@ class ReportWriter:
 
         filename.write_text("\n".join(lines))
         if commit:
-            self.repo.git.add(str(filename))
-            self.repo.index.commit(f"Add stock summary for {date_str}")
+            self.committer.add_and_commit(filename, f"Add stock summary for {date_str}")
         return filename

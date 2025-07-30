@@ -1,5 +1,4 @@
 import sys
-import json
 import logging
 from pathlib import Path
 from typing import List, Dict
@@ -13,6 +12,7 @@ from evaluation.evaluator import Evaluator
 from relevance_matcher import RelevanceMatcher
 from report_writer import ReportWriter
 from learn_new_stocks import learn_new_stocks
+from watchlist import WatchlistManager
 
 
 def apply_metrics_to_summary(summary_path: Path, metrics: Dict[str, Dict]):
@@ -45,28 +45,13 @@ def apply_metrics_to_summary(summary_path: Path, metrics: Dict[str, Dict]):
     summary_path.write_text("\n".join(new_lines))
 
 
-def _load_watchlist(path: str = "watchlist.json") -> List[Dict]:
-    """Load watchlist entries from JSON."""
-    p = Path(path)
-    if not p.exists():
-        return []
-    try:
-        data = json.loads(p.read_text())
-        if isinstance(data, list):
-            return data
-    except Exception as e:
-        logging.exception("Failed to parse watchlist: %s", e)
-    return []
-
-
-def _save_watchlist(entries: List[Dict], path: str = "watchlist.json") -> None:
-    Path(path).write_text(json.dumps(entries, indent=2))
 
 
 def gather_flow(query: str = "stock market", commit: bool = True):
     """Generate prediction reports for all symbols in the watchlist."""
     logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
-    entries = _load_watchlist()
+    manager = WatchlistManager()
+    entries = manager.load()
     if not entries:
         print("Watchlist is empty")
         return
@@ -124,7 +109,8 @@ def gather_flow(query: str = "stock market", commit: bool = True):
 
 
 def evaluate_flow(symbol: str | None = None, commit: bool = True):
-    entries = _load_watchlist()
+    manager = WatchlistManager()
+    entries = manager.load()
     symbols = [e.get("symbol") for e in entries if e.get("symbol")]
     if symbol:
         symbols = [symbol]
