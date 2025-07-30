@@ -3,6 +3,10 @@ from __future__ import annotations
 from datetime import datetime
 from typing import List, Dict, Tuple
 
+import logging
+import os
+
+import openai
 from textblob import TextBlob
 from dateutil import parser
 
@@ -10,12 +14,33 @@ from dateutil import parser
 class SentimentAnalyzer:
     """Perform sentiment analysis and compute weighted scores."""
 
+    def __init__(self) -> None:
+        self.api_key = os.getenv("OPENAI_API_KEY")
+        if self.api_key:
+            openai.api_key = self.api_key
+
     def analyze(self, items: List[Dict]) -> List[Dict]:
         """Return sentiment info for each relevant news item."""
         results: List[Dict] = []
         for item in items:
             title = item.get("title", "")
-            polarity = TextBlob(title).sentiment.polarity
+            polarity = 0.0
+            if self.api_key:
+                try:
+                    resp = openai.ChatCompletion.create(
+                        model="gpt-3.5-turbo",
+                        messages=[
+                            {"role": "system", "content": "Return a sentiment polarity score between -1 and 1."},
+                            {"role": "user", "content": title},
+                        ],
+                        temperature=0,
+                    )
+                    polarity = float(resp.choices[0].message.content.strip())
+                except Exception as e:
+                    logging.exception("OpenAI sentiment failed: %s", e)
+                    polarity = TextBlob(title).sentiment.polarity
+            else:
+                polarity = TextBlob(title).sentiment.polarity
             results.append({
                 "title": title,
                 "sentiment": float(polarity),
