@@ -17,7 +17,7 @@ class ReportWriter:
         REPORT_DIR.mkdir(exist_ok=True)
         self.repo = Repo(Path(__file__).resolve().parent)
 
-    def write(self, results: List[Dict]) -> Path:
+    def write(self, results: List[Dict], commit: bool = True) -> Path:
         date_str = datetime.utcnow().strftime("%Y-%m-%d")
         filename = REPORT_DIR / f"stock_report_{date_str}.json"
         payload = {
@@ -25,11 +25,12 @@ class ReportWriter:
             "results": results,
         }
         filename.write_text(json.dumps(payload, indent=2))
-        self.repo.git.add(str(filename))
-        self.repo.index.commit(f"Add stock report for {date_str}")
+        if commit:
+            self.repo.git.add(str(filename))
+            self.repo.index.commit(f"Add stock report for {date_str}")
         return filename
 
-    def write_summary(self, results: List[Dict]) -> Path:
+    def write_summary(self, results: List[Dict], commit: bool = True) -> Path:
         """Generate a human readable text summary for all stocks."""
         date_str = datetime.utcnow().strftime("%Y-%m-%d")
         filename = REPORT_DIR / f"stock_summary_{date_str}.txt"
@@ -124,6 +125,7 @@ class ReportWriter:
             lines.append("-" * 40)
 
         filename.write_text("\n".join(lines))
-        self.repo.git.add(str(filename))
-        self.repo.index.commit(f"Add stock summary for {date_str}")
+        if commit:
+            self.repo.git.add(str(filename))
+            self.repo.index.commit(f"Add stock summary for {date_str}")
         return filename

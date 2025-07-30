@@ -23,7 +23,7 @@ class Evaluator:
             raise FileNotFoundError('No prediction reports found')
         return reports[-1]
 
-    def evaluate(self, symbol: str):
+    def evaluate(self, symbol: str, commit: bool = True):
         report_path = self._latest_report()
         parts = report_path.stem.split('-')
         date_str = '-'.join(parts[-3:])
@@ -104,6 +104,7 @@ class Evaluator:
                 lines.append(f"Delta error: {delta_error:.4f}")
 
         filename.write_text('\n'.join(lines))
-        self.repo.git.add(str(filename))
-        self.repo.index.commit(f"Add evaluation report for {eval_date}")
+        if commit:
+            self.repo.git.add(str(filename))
+            self.repo.index.commit(f"Add evaluation report for {eval_date}")
         return filename
